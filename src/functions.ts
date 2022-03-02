@@ -3,7 +3,7 @@ import { getTimingPoints, getHitObjects, loadFile } from "./parser/parser";
 // prettier-ignore
 const filePath = "";
 
-export function updateTimingPoints(timingPoints: any[], newBPM: number) {
+export function updateTimingPoints(timingPoints: any[], RATE: number) {
     return timingPoints.map((p) => {
         const item = {
             point: p[0].split(","),
@@ -11,10 +11,10 @@ export function updateTimingPoints(timingPoints: any[], newBPM: number) {
         };
 
         // PARSE FLOAT NOT PARSE INT I GOT IT YESSSSSSSSSSSSSSSSSSSSSSSSSSS
-        item.point[0] = String(parseFloat(item.point[0]) * (item.bpm / newBPM));
+        item.point[0] = String(parseFloat(item.point[0]) / RATE);
 
-        if (item.point[1] > 0) {
-            item.point[1] = String(parseFloat(item.point[1]) * (item.bpm / newBPM));
+        if (parseFloat(item.point[1]) > 0) {
+            item.point[1] = String(parseFloat(item.point[1]) / RATE);
         }
 
         return item.point.join(",");
@@ -26,10 +26,9 @@ export function updateHitObjects() {}
 
 const points = getTimingPoints(loadFile(filePath));
 const objects = getHitObjects(loadFile(filePath));
+const fixedPoints = updateTimingPoints(points, 1.3);
 
-const fixedPoints = updateTimingPoints(points, 227.5);
-
-console.log(fixedPoints.join("\n"))
+console.log(fixedPoints.join("\n"));
 
 // console.log(parseObjects("HitObjects", loadFile(filePath)));
 // console.log(

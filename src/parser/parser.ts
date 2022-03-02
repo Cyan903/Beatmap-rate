@@ -29,15 +29,16 @@ export const getTimingPoints = (config: any) => {
 
     // https://github.com/nojhamster/osu-parser/blob/539b73e087d46de7aa7159476c7ea6ac50983c97/index.js#L114
     for (let point in timingPoints) {
-        const p = parseFloat(timingPoints[point].split(",")[1]);        
-        const bpm = (!isNaN(p) && p !== 0 && p > 0) ? 60000 / p : lastBPM;
+        const p = parseFloat(timingPoints[point].split(",")[1]);
+        const bpm = !isNaN(p) && p !== 0 && p > 0 ? 60000 / p : lastBPM;
 
         lastBPM = bpm;
         timingPoints[point] = [timingPoints[point], bpm];
     }
 
     return timingPoints;
-}
+};
 
 // We don't need to do anything special here
-export const getHitObjects = (config: any) => parseObjects("HitObjects", config);
+export const getHitObjects = (config: any) =>
+    parseObjects("HitObjects", config);
