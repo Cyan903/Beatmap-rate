@@ -2,6 +2,10 @@ import consola from "consola";
 
 export function updateTimingPoints(timingPoints: any[], rate: number) {
     return timingPoints.map((p) => {
+        if (p[0].startsWith("//")) {
+            return p[0];
+        }
+
         const item = {
             point: p[0].split(","),
             bpm: p[1],
@@ -23,6 +27,10 @@ export function updateHitObjects(objects: any[], rate: number) {
     consola.info(`moving notes | x${objects.length} total`);
 
     return objects.map((n) => {
+        if (n.startsWith("//")) {
+            return n;
+        }
+
         const note = n.split(",");
         note[2] = String(parseFloat(note[2]) / rate);
 
