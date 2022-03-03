@@ -1,6 +1,7 @@
-import fs from "fs";
+import { readFileSync } from "fs";
 import ini from "ini";
 import consola from "consola";
+import parser from "osu-parser";
 
 export function loadFile(filePath: string) {
     try {
@@ -9,10 +10,12 @@ export function loadFile(filePath: string) {
             process.exit(1);
         }
 
-        const file = ini.parse(fs.readFileSync(filePath, "utf-8"));
-        consola.success(`[loadFile] loaded ${filePath}`)
-        
-        return file;
+        const content = readFileSync(filePath, "utf-8");
+        const file = ini.parse(content);
+        const beatmap = parser.parseContent(content);
+
+        consola.success(`[loadFile] loaded ${filePath}`);
+        return { file, beatmap };
     } catch {
         consola.fatal(`[loadFile] could not process "${filePath}"`);
         process.exit(1);
@@ -46,6 +49,24 @@ export const getTimingPoints = (config: any) => {
 
     return timingPoints;
 };
+
+export function addToFile(
+    beatmap: any,
+    hitObjects: any[],
+    timingPoints: any[],
+    oldAudio: string,
+    newAudio: string
+): string {
+    let oldData = ini.stringify(beatmap).replace(/=true\n/g, "\n").replace(oldAudio, newAudio);
+    const pointData = `[TimingPoints]\n${timingPoints.join("\n")}`;
+    const hitData = `\n[HitObjects]\n${hitObjects.join("\n")}`;
+
+    return [oldData, pointData, hitData, ""].join("\n");
+}
+
+export function updateValue() {
+    
+}
 
 // We don't need to do anything special here
 export const getHitObjects = (config: any) =>

@@ -22,7 +22,6 @@ export function updateTimingPoints(timingPoints: any[], rate: number) {
     });
 }
 
-// WILL NOT RUN UNLESS TIMING POINTS ARE DONE
 export function updateHitObjects(objects: any[], rate: number) {
     consola.info(`moving notes | x${objects.length} total`);
 
