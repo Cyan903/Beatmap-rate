@@ -1,4 +1,14 @@
 {
+    "name": "beatmap-rate-modding",
+    "version": "1.0.0",
+    "description": "Change beatmap playback speed.",
+    "scripts": {
+        "build": "tsc",
+        "app": "node dist/index.js",
+        "start": "tsc ; node dist/index.js"
+    },
+    "author": "",
+    "license": "ISC",
     "dependencies": {
         "consola": "^2.15.3",
         "ini": "^2.0.0",
@@ -12,13 +22,5 @@
         "@types/node": "^17.0.21",
         "ts-node": "^10.6.0",
         "typescript": "^4.6.2"
-    },
-    "name": "osu-rate",
-    "version": "1.0.0",
-    "scripts": {
-        "app": "tsc ; node dist/index.js"
-    },
-    "author": "",
-    "license": "ISC",
-    "description": ""
+    }
 }
