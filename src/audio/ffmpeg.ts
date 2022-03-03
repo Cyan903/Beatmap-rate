@@ -1,10 +1,26 @@
-import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 import consola from "consola";
+import path from "path";
+import { exec } from "child_process";
 
-const ffmpeg = createFFmpeg();
+export function createFileName(filename: string, rate: number) {
+    const p = path.parse(filename);
 
-export async function initAudio() {
-    await ffmpeg.load();
-    consola.success("[initAudio] loaded ffmpeg");
+    return `${p.name} [${rate.toFixed(2)}x]-${Date.now()}${p.ext}`;
 }
 
+// https://superuser.com/a/1676402
+export async function modAudio(npath: string, filename: string, rate: number) {
+    const newName = createFileName(filename, rate);
+
+    exec(
+        `ffmpeg -i "${npath+filename}" -vf "setpts=(PTS-STARTPTS)/${rate}" -af atempo=${rate} "${npath+newName}"`,
+        (err) => {
+            if (err) {
+                consola.fatal(`[modAudio] error modding audio ${filename}`);
+                process.exit(1);
+            }
+
+            consola.success(`[modAudio] modded audio to ${rate}x rate`);
+        }
+    );
+}
