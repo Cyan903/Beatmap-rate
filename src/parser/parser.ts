@@ -4,7 +4,15 @@ import consola from "consola";
 
 export function loadFile(filePath: string) {
     try {
-        return ini.parse(fs.readFileSync(filePath, "utf-8"));
+        if (!filePath.endsWith(".osu")) {
+            consola.fatal(`[loadFile] "${filePath}" not a .osu file!`);
+            process.exit(1);
+        }
+
+        const file = ini.parse(fs.readFileSync(filePath, "utf-8"));
+        consola.success(`[loadFile] loaded ${filePath}`)
+        
+        return file;
     } catch {
         consola.fatal(`[loadFile] could not process "${filePath}"`);
         process.exit(1);

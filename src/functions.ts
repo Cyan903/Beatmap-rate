@@ -1,8 +1,4 @@
 import consola from "consola";
-import { getTimingPoints, getHitObjects, loadFile } from "./parser/parser";
-
-// prettier-ignore
-const filePath = "";
 
 export function updateTimingPoints(timingPoints: any[], rate: number) {
     return timingPoints.map((p) => {
@@ -24,6 +20,8 @@ export function updateTimingPoints(timingPoints: any[], rate: number) {
 
 // WILL NOT RUN UNLESS TIMING POINTS ARE DONE
 export function updateHitObjects(objects: any[], rate: number) {
+    consola.info(`moving notes | x${objects.length} total`);
+
     return objects.map((n) => {
         const note = n.split(",");
         note[2] = String(parseFloat(note[2]) / rate);
@@ -31,9 +29,3 @@ export function updateHitObjects(objects: any[], rate: number) {
         return note.join(",");
     });
 }
-
-const points = getTimingPoints(loadFile(filePath));
-const objects = getHitObjects(loadFile(filePath));
-
-const fixedPoints = updateTimingPoints(points, 1.4);
-const fixedObjects = updateHitObjects(objects, 1.4);
