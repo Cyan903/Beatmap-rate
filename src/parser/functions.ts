@@ -1,24 +1,21 @@
 import consola from "consola";
 
 export function updateTimingPoints(timingPoints: any[], rate: number) {
+    consola.info(`moving timing | x${timingPoints.length} total`);
+
     return timingPoints.map((p) => {
-        if (p[0].startsWith("//")) {
+        if (p.startsWith("//")) {
             return p[0];
         }
 
-        const item = {
-            point: p[0].split(","),
-            bpm: p[1],
-        };
-
-        item.point[0] = String(parseFloat(item.point[0]) / rate);
-        consola.info(`changing bpm | ${item.bpm} -> ${item.bpm * rate}`);
-
-        if (parseFloat(item.point[1]) > 0) {
-            item.point[1] = String(parseFloat(item.point[1]) / rate);
+        const item = p.split(",");
+        item[0] = String(parseFloat(item[0]) / rate);
+        
+        if (parseFloat(item[1]) > 0) {
+            item[1] = String(parseFloat(item[1]) / rate);
         }
 
-        return item.point.join(",");
+        return item.join(",");
     });
 }
 

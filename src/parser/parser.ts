@@ -3,6 +3,45 @@ import ini from "ini";
 import consola from "consola";
 import parser from "osu-parser";
 
+const sectionReg = /^\[([a-zA-Z0-9]+)\]$/;
+const keyValReg = /^([a-zA-Z0-9]+)[ ]*:[ ]*(.+)$/;
+
+// https://github.com/nojhamster/osu-parser/blob/539b73e087d46de7aa7159476c7ea6ac50983c97/index.js#L359
+function parseLine(line: string, beatmap: any) {
+    let match = sectionReg.exec(line);
+
+    if (match) {
+        beatmap.group = match[1].toLowerCase();
+        return;
+    }
+
+    switch (beatmap.group) {
+        case "timingpoints":
+            beatmap.timingPoints.push(line);
+            break;
+        case "hitobjects":
+            beatmap.hitObjects.push(line);
+            break;
+        case "events":
+            beatmap.events.push(line);
+            break;
+
+        default:
+            if (!beatmap.group) {
+                match = /^osu file format (v[0-9]+)$/.exec(line);
+                if (match) {
+                    beatmap.fileFormat = match[1];
+                    return;
+                }
+            }
+    }
+
+    match = keyValReg.exec(line);
+    if (match) {
+        beatmap[match[1]] = match[2];
+    }
+}
+
 export function loadFile(filePath: string) {
     try {
         if (!filePath.endsWith(".osu")) {
@@ -10,64 +49,52 @@ export function loadFile(filePath: string) {
             process.exit(1);
         }
 
-        const content = readFileSync(filePath, "utf-8");
-        const file = ini.parse(content);
-        const beatmap = parser.parseContent(content);
+        const beatmap = {
+            timingPoints: [] as string[],
+            hitObjects: [] as string[],
+            events: [] as string[],
+        };
 
-        consola.success(`[loadFile] loaded ${filePath}`);
-        return { file, beatmap };
+        const content = readFileSync(filePath, "utf-8");
+
+        for (const line of content.split("\n")) {
+            const ln = line.toString().trim();
+
+            if (!ln) continue;
+            parseLine(ln, beatmap);
+        }
+
+        return beatmap;
     } catch {
         consola.fatal(`[loadFile] could not process "${filePath}"`);
         process.exit(1);
     }
 }
 
-function parseObjects(obj: string, config: any): string[] {
-    const items = config[obj];
+export function replaceAll(result: string, map: any, newMap: any) {
+    for (const ln in map) {
+        const point = map[ln];
 
-    if (typeof items !== "object") {
-        consola.fatal(`[parseObjects] could not read "${obj}" in file`);
-        process.exit(1);
+        if (point.startsWith("//")) {
+            continue;
+        }
+
+        result = result.replace(point, newMap[parseInt(ln)]);
     }
 
-    return Object.keys(items);
+    return result;
 }
 
-// Calculate the BPM
-export const getTimingPoints = (config: any) => {
-    const timingPoints: any[] = parseObjects("TimingPoints", config);
-    let lastBPM = 0;
-
-    // https://github.com/nojhamster/osu-parser/blob/539b73e087d46de7aa7159476c7ea6ac50983c97/index.js#L114
-    for (let point in timingPoints) {
-        const p = parseFloat(timingPoints[point].split(",")[1]);
-        const bpm = !isNaN(p) && p !== 0 && p > 0 ? 60000 / p : lastBPM;
-
-        lastBPM = bpm;
-        timingPoints[point] = [timingPoints[point], bpm];
+export function replaceValue(result: string, key: string, value: string) {
+    for (let i of result.split("\n")) {
+        const ln = i.toString().trim();
+        const match = keyValReg.exec(ln);
+        if (!match) {
+            continue;
+        } else if (match[1].toLowerCase() == key.toLowerCase()) {
+            result = result.replace(match[0], `${match[1]}: ${value}`);
+        }
     }
 
-    return timingPoints;
-};
-
-export function addToFile(
-    beatmap: any,
-    hitObjects: any[],
-    timingPoints: any[],
-    oldAudio: string,
-    newAudio: string
-): string {
-    let oldData = ini.stringify(beatmap).replace(/=true\n/g, "\n").replace(oldAudio, newAudio);
-    const pointData = `[TimingPoints]\n${timingPoints.join("\n")}`;
-    const hitData = `\n[HitObjects]\n${hitObjects.join("\n")}`;
-
-    return [oldData, pointData, hitData, ""].join("\n");
+    return result;
 }
-
-export function updateValue() {
-    
-}
-
-// We don't need to do anything special here
-export const getHitObjects = (config: any) =>
-    parseObjects("HitObjects", config);

@@ -1,11 +1,6 @@
 import { updateTimingPoints, updateHitObjects } from "./parser/functions";
-import { copyFile, writeFileSync } from "fs";
-import {
-    getTimingPoints,
-    getHitObjects,
-    loadFile,
-    addToFile,
-} from "./parser/parser";
+import { copyFile, readFile, writeFile } from "fs";
+import { loadFile, replaceAll, replaceValue } from "./parser/parser";
 import { modAudio, createFileName } from "./audio/ffmpeg";
 import consola from "consola";
 
@@ -19,19 +14,17 @@ export async function modBeatmap(
         process.exit(1);
     }
 
-    const map = loadFile(npath + filename);
-    const bAudio = map.beatmap.AudioFilename;
-    const objects = {
-        hit: getHitObjects(map.file),
-        timing: getTimingPoints(map.file),
-    };
+    const map: any = loadFile(npath + filename);
+    const bAudio = map.AudioFilename;
 
     // better to copy the file and edit whats necessary beacause I would rather this
     // app only affect the objects that need to be changed.
     const newAudio = await modAudio(npath, bAudio, rate);
-    const newHitObjects = updateHitObjects(objects.hit, rate);
-    const newTimingPoints = updateTimingPoints(objects.timing, rate);
     const newName = createFileName(filename, rate);
+    const newVersion = `${map.Version} [${rate}x]`;
+
+    const newHitObjects = updateHitObjects(map.hitObjects, rate);
+    const newTimingPoints = updateTimingPoints(map.timingPoints, rate);
 
     copyFile(npath + filename, npath + newName, (err) => {
         if (err) {
@@ -42,23 +35,37 @@ export async function modBeatmap(
         consola.success(`created new file -> ${newName}`);
     });
 
-    delete map.file.TimingPoints;
-    delete map.file.HitObjects;
+    readFile(npath + newName, "utf8", (err, data) => {
+        if (err) {
+            consola.fatal(`[readFile] error reading file ${newName}`);
+            consola.log(err);
+            process.exit(1);
+        }
 
-    writeFileSync(
-        npath + newName,
-        addToFile(
-            map.file,
-            newHitObjects,
-            newTimingPoints,
-            map.beatmap.AudioFilename,
-            newAudio
-        )
-    );
+        data = replaceAll(data, map.hitObjects, newHitObjects);
+        data = replaceAll(data, map.timingPoints, newTimingPoints);
+        data = replaceValue(data, "AudioFilename", newAudio);
+        data = replaceValue(data, "Version", newVersion);
+        data = replaceValue(
+            data,
+            "PreviewTime",
+            String(map.PreviewTime / rate)
+        );
+
+        writeFile(npath + newName, data, "utf8", (err) => {
+            if (err) {
+                consola.fatal(`[readFile] error writting file ${newName}`);
+                consola.log(err);
+                process.exit(1);
+            }
+
+            consola.success(`modded new file -> ${newName}`);
+        });
+    });
 }
 
 modBeatmap(
-    "/osu/Songs/1367326 rejection - The Way Of Adventure (feat Kusaka Akira)/",
-    "rejection - The Way Of Adventure (feat. Kusaka Akira) (KuroKuroKuro) [Kuro & Shamirin's Adventure].osu",
-    1.3
+    "./tmp/_bemodding/",
+    "Camellia - Kono Hoshi de.... (Raytoly) [Reality].osu",
+    0.7
 );
