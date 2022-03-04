@@ -49,7 +49,7 @@ export async function modBeatmap(
         data = replaceValue(
             data,
             "PreviewTime",
-            String(map.PreviewTime / rate)
+            String(~~(map.PreviewTime / rate))
         );
 
         writeFile(npath + newName, data, "utf8", (err) => {
@@ -65,7 +65,7 @@ export async function modBeatmap(
 }
 
 modBeatmap(
-    "./tmp/_bemodding/",
-    "Camellia - Kono Hoshi de.... (Raytoly) [Reality].osu",
-    0.7
+    "/home/micah/Games/osu/drive_c/osu/Songs/1217647 Shiraishi - Moon-gate/",
+    "Shiraishi - Moon-gate (DrLou) [Hard].osu",
+    1.3
 );

@@ -1,7 +1,5 @@
 import { readFileSync } from "fs";
-import ini from "ini";
 import consola from "consola";
-import parser from "osu-parser";
 
 const sectionReg = /^\[([a-zA-Z0-9]+)\]$/;
 const keyValReg = /^([a-zA-Z0-9]+)[ ]*:[ ]*(.+)$/;
