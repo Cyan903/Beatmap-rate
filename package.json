@@ -1,5 +1,5 @@
 {
-    "name": "beatmap-rate-modding",
+    "name": "beatmap-rate",
     "version": "1.0.0",
     "description": "Change beatmap playback speed.",
     "main": "./dist/bin/cli.js",

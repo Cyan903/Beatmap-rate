@@ -52,6 +52,3 @@ export async function modBeatmap(
         consola.success(`modded new file -> ${newName}`);
     });
 }
-
-
-consola.log("EREE")
