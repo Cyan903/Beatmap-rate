@@ -10,8 +10,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "consola": "^2.15.3",
-        "install": "^0.13.0"
+        "consola": "^2.15.3"
     },
     "devDependencies": {
         "@types/consola": "^2.2.5",

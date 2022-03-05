@@ -65,7 +65,7 @@ export async function modBeatmap(
 }
 
 modBeatmap(
-    "/home/micah/Games/osu/drive_c/osu/Songs/1217647 Shiraishi - Moon-gate/",
+    "Songs/1217647 Shiraishi - Moon-gate/",
     "Shiraishi - Moon-gate (DrLou) [Hard].osu",
     1.3
 );
