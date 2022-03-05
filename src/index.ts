@@ -53,8 +53,5 @@ export async function modBeatmap(
     });
 }
 
-modBeatmap(
-    "./tmp/_bemodding/",
-    "Camellia - Kono Hoshi de.... (Raytoly) [Reality].osu",
-    1.3
-);
+
+consola.log("EREE")
