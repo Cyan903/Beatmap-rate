@@ -16,15 +16,15 @@ export async function modAudio(
     pitchType: boolean
 ) {
     const newName = createFileName(filename, rate);
-    const cmds = !pitchType
+    const cmds = pitchType
         ? `ffmpeg -i "${
               npath + filename
-          }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af atempo=${rate} "${
+          }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af "asetrate=44100*${rate}" "${
               npath + newName
           }" -y`
         : `ffmpeg -i "${
               npath + filename
-          }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af "asetrate=44100*${rate}" "${
+          }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af atempo=${rate} "${
               npath + newName
           }" -y`;
 
@@ -40,7 +40,9 @@ export async function modAudio(
             process.exit(1);
         }
 
-        consola.success(`modded audio to ${rate}x rate`);
+        consola.success(
+            `modded audio to ${rate}x rate ${pitchType ? "(nightcore)" : ""}`
+        );
     });
 
     return newName;

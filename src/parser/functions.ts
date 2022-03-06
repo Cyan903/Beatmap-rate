@@ -28,7 +28,17 @@ export function updateHitObjects(objects: string[], rate: number) {
         }
 
         const note = n.split(",");
-        note[2] = String(parseFloat(note[2]) / rate);
+        const type = note[3];
+
+        switch (type) {
+            case "12":
+                note[2] = String(parseFloat(note[2]) / rate);
+                note[5] = String(parseFloat(note[5]) / rate);
+                break;
+            default:
+                note[2] = String(parseFloat(note[2]) / rate);
+                break;
+        }
 
         return note.join(",");
     });
