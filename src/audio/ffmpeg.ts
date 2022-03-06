@@ -9,22 +9,39 @@ export function createFileName(filename: string, rate: number) {
 }
 
 // https://superuser.com/a/1676402
-export async function modAudio(npath: string, filename: string, rate: number) {
+export async function modAudio(
+    npath: string,
+    filename: string,
+    rate: number,
+    pitchType: boolean
+) {
     const newName = createFileName(filename, rate);
+    const cmds = !pitchType
+        ? `ffmpeg -i "${
+              npath + filename
+          }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af atempo=${rate} "${
+              npath + newName
+          }" -y`
+        : `ffmpeg -i "${
+              npath + filename
+          }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af "asetrate=44100*${rate}" "${
+              npath + newName
+          }" -y`;
 
-    exec(
-        // prettier-ignore
-        `ffmpeg -i "${npath+filename}" -vf "setpts=(PTS-STARTPTS)/${rate}" -af atempo=${rate} "${npath+newName}" -y`,
-        (err) => {
-            if (err) {
-                consola.fatal(`[modAudio] error modding audio ${filename}`);
-                consola.log(err);
-                process.exit(1);
-            }
+    if (!cmds) {
+        consola.fatal("[modAudio] invalid option for ffmpeg");
+        process.exit(1);
+    }
 
-            consola.success(`modded audio to ${rate}x rate`);
+    exec(cmds, (err) => {
+        if (err) {
+            consola.fatal(`[modAudio] error modding audio ${filename}`);
+            consola.log(err);
+            process.exit(1);
         }
-    );
+
+        consola.success(`modded audio to ${rate}x rate`);
+    });
 
     return newName;
 }

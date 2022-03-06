@@ -18,6 +18,7 @@ async function parseArgs(args: minimist.ParsedArgs) {
     const editVals: FileMap = {};
     const aPath = args.path;
     const aRate = args.rate;
+    const pitch = !!args.nightcore;
 
     if (args.help || args.info) {
         print(args.help ? "help" : "info");
@@ -57,7 +58,7 @@ async function parseArgs(args: minimist.ParsedArgs) {
         }
     }
 
-    const newFilename = await modBeatmap(filepath, filename, aRate);
+    const newFilename = await modBeatmap(filepath, filename, aRate, pitch);
     await changeParam(filepath, newFilename, editVals);
 }
 
