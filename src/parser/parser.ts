@@ -5,6 +5,7 @@ const sectionReg = /^\[([a-zA-Z0-9]+)\]$/;
 const keyValReg = /^([a-zA-Z0-9]+)[ ]*:[ ]*(.+)$/;
 
 // https://github.com/nojhamster/osu-parser/blob/539b73e087d46de7aa7159476c7ea6ac50983c97/index.js#L359
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseLine(line: string, beatmap: any) {
     let match = sectionReg.exec(line);
 
@@ -69,7 +70,7 @@ export function loadFile(filePath: string) {
     }
 }
 
-export function replaceAll(result: string, map: any, newMap: any) {
+export function replaceAll(result: string, map: string[], newMap: string[]) {
     for (const ln in map) {
         const point = map[ln];
 
@@ -84,7 +85,7 @@ export function replaceAll(result: string, map: any, newMap: any) {
 }
 
 export function replaceValue(result: string, key: string, value: string) {
-    for (let i of result.split("\n")) {
+    for (const i of result.split("\n")) {
         const ln = i.toString().trim();
         const match = keyValReg.exec(ln);
         if (!match) {

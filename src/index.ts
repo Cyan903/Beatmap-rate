@@ -2,6 +2,7 @@ import { updateTimingPoints, updateHitObjects } from "./parser/functions";
 import { readFileSync, writeFile } from "fs";
 import { loadFile, replaceAll, replaceValue } from "./parser/parser";
 import { modAudio, createFileName } from "./audio/ffmpeg";
+import { Beatmap, FileMap } from "./types";
 import consola from "consola";
 
 export async function modBeatmap(
@@ -14,7 +15,7 @@ export async function modBeatmap(
         process.exit(1);
     }
 
-    const map: any = loadFile(npath + filename);
+    const map: Beatmap = loadFile(npath + filename);
     const bAudio = map.AudioFilename;
 
     consola.log(`Modding ${map.Title} [${map.Version}]`);
@@ -43,7 +44,7 @@ export async function modBeatmap(
     data = replaceValue(
         data,
         "PreviewTime",
-        String(~~(map.PreviewTime / rate))
+        String(~~(parseInt(map.PreviewTime) / rate))
     );
 
     writeFile(npath + newName, data, "utf8", (err) => {
@@ -57,9 +58,7 @@ export async function modBeatmap(
     });
 }
 
-export function changeParam(npath: string, filename: string, changes: {
-    [arg: string]: any;
-}) {
+export function changeParam(npath: string, filename: string, changes: FileMap) {
     for (const [k, v] of Object.entries(changes)) {
         // TODO
         consola.log(k, v);

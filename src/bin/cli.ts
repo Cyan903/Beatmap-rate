@@ -4,6 +4,7 @@ import { modBeatmap, changeParam } from "../index";
 import consola from "consola";
 import minimist from "minimist";
 import { cmdList, print } from "./cmd";
+import { FileMap } from "../types";
 
 function invalidArg(arg: string) {
     if (String(arg) == "true") {
@@ -14,7 +15,7 @@ function invalidArg(arg: string) {
 }
 
 async function parseArgs(args: minimist.ParsedArgs) {
-    const editVals: any = {};
+    const editVals: FileMap = {};
     const aPath = args.path;
     const aRate = args.rate;
 
@@ -57,12 +58,12 @@ async function parseArgs(args: minimist.ParsedArgs) {
     }
 
     await modBeatmap(filepath, filename, aRate);
-    await changeParam(filepath, filename, editVals);
+    changeParam(filepath, filename, editVals);
 }
 
 function shorthands(args: minimist.ParsedArgs): minimist.ParsedArgs {
     const shorts: {
-        [arg: string]: any;
+        [arg: string]: string;
     } = {};
 
     cmdList.forEach((k) => (shorts[k[0]] = k));

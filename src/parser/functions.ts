@@ -1,6 +1,6 @@
 import consola from "consola";
 
-export function updateTimingPoints(timingPoints: any[], rate: number) {
+export function updateTimingPoints(timingPoints: string[], rate: number) {
     consola.info(`moving timing | x${timingPoints.length} total`);
 
     return timingPoints.map((p) => {
@@ -19,7 +19,7 @@ export function updateTimingPoints(timingPoints: any[], rate: number) {
     });
 }
 
-export function updateHitObjects(objects: any[], rate: number) {
+export function updateHitObjects(objects: string[], rate: number) {
     consola.info(`moving notes | x${objects.length} total`);
 
     return objects.map((n) => {
