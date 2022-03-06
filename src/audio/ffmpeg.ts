@@ -13,6 +13,7 @@ export async function modAudio(npath: string, filename: string, rate: number) {
     const newName = createFileName(filename, rate);
 
     exec(
+        // prettier-ignore
         `ffmpeg -i "${npath+filename}" -vf "setpts=(PTS-STARTPTS)/${rate}" -af atempo=${rate} "${npath+newName}" -y`,
         (err) => {
             if (err) {

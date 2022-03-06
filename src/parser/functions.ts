@@ -10,7 +10,7 @@ export function updateTimingPoints(timingPoints: string[], rate: number) {
 
         const item = p.split(",");
         item[0] = String(parseFloat(item[0]) / rate);
-        
+
         if (parseFloat(item[1]) > 0) {
             item[1] = String(parseFloat(item[1]) / rate);
         }
