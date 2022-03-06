@@ -1,0 +1,10 @@
+Command List:
+    -h, --help      - Prints this help
+    -i, --info      - Information about this program
+    -p, --path      - Path to .osu file (REQUIRED)
+    -r, --rate      - Speed multiplier (REQUIRED)
+    -v, --version   - Change beatmap's version name
+    -c, --creator   - Change beatmap's creator
+    -a, --artist    - Change beatmap's artist
+    -f, --free      - Cleanup unused audio files
+    -n, --nightcore - Change audio pitch (y/n)

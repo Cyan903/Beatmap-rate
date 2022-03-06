@@ -1,0 +1,3 @@
+- About: https://github.com/CyanPiano/beatmap-rate
+- Reference: https://osu.ppy.sh/wiki/en/Client/File_formats/Osu_%28file_format%29
+- Documentation: --help

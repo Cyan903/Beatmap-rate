@@ -17,6 +17,10 @@ export async function modBeatmap(
     const map: any = loadFile(npath + filename);
     const bAudio = map.AudioFilename;
 
+    consola.log(`Modding ${map.Title} [${map.Version}]`);
+    consola.log(`Audio: ${npath + map.AudioFilename}`);
+    consola.log(`ID: ${map.BeatmapID}\n`);
+
     // better to copy the file and edit whats necessary beacause I would rather this
     // app only affect the objects that need to be changed.
     const newAudio = await modAudio(npath, bAudio, rate);
@@ -51,4 +55,13 @@ export async function modBeatmap(
 
         consola.success(`modded new file -> ${newName}`);
     });
+}
+
+export function changeParam(npath: string, filename: string, changes: {
+    [arg: string]: any;
+}) {
+    for (const [k, v] of Object.entries(changes)) {
+        // TODO
+        consola.log(k, v);
+    }
 }
