@@ -10,7 +10,7 @@
         "build": "tsc",
         "install": "npm i -g .",
         "lint": "eslint .",
-		"lint:fix": "eslint . --fix",
+        "lint:fix": "eslint . --fix",
         "pretty": "prettier ./src --write"
     },
     "author": "CyanPiano",
