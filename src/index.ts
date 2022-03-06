@@ -1,5 +1,5 @@
 import { updateTimingPoints, updateHitObjects } from "./parser/functions";
-import { readFileSync, writeFile } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { loadFile, replaceAll, replaceValue } from "./parser/parser";
 import { modAudio, createFileName } from "./audio/ffmpeg";
 import { Beatmap, FileMap } from "./types";
@@ -47,20 +47,36 @@ export async function modBeatmap(
         String(~~(parseInt(map.PreviewTime) / rate))
     );
 
-    writeFile(npath + newName, data, "utf8", (err) => {
-        if (err) {
-            consola.fatal(`[readFile] error writting file ${newName}`);
-            consola.log(err);
-            process.exit(1);
-        }
-
+    try {
+        await writeFileSync(npath + newName, data, "utf8");
         consola.success(`modded new file -> ${newName}`);
-    });
+    } catch (err) {
+        consola.fatal(`[writeFileSync] error writting file ${newName}`);
+        consola.log(err);
+        process.exit(1);
+    }
+
+    return newName;
 }
 
-export function changeParam(npath: string, filename: string, changes: FileMap) {
+export async function changeParam(
+    npath: string,
+    filename: string,
+    changes: FileMap
+) {
+    let data = await readFileSync(npath + filename, "utf-8");
+    consola.info("adding metadata changes...");
+
     for (const [k, v] of Object.entries(changes)) {
-        // TODO
-        consola.log(k, v);
+        data = replaceValue(data, k, v);
+    }
+
+    try {
+        await writeFileSync(npath + filename, data, "utf8");
+        consola.success(`metadata changes applied to -> ${filename}`);
+    } catch (err) {
+        consola.fatal("[writeFileSync] error applying metadata changes");
+        consola.log(err);
+        process.exit(1);
     }
 }

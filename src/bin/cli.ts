@@ -39,7 +39,7 @@ async function parseArgs(args: minimist.ParsedArgs) {
         if (!["artist", "creator", "version"].includes(k)) {
             continue;
         } else if (invalidArg(v)) {
-            consola.info(`cannot set ${k}, check arguments`);
+            consola.error(`cannot set ${k}, check arguments`);
             continue;
         }
 
@@ -57,8 +57,8 @@ async function parseArgs(args: minimist.ParsedArgs) {
         }
     }
 
-    await modBeatmap(filepath, filename, aRate);
-    changeParam(filepath, filename, editVals);
+    const newFilename = await modBeatmap(filepath, filename, aRate);
+    await changeParam(filepath, newFilename, editVals);
 }
 
 function shorthands(args: minimist.ParsedArgs): minimist.ParsedArgs {

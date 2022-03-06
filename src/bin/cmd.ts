@@ -14,6 +14,5 @@ export const cmdList = [
     "version",
     "creator",
     "artist",
-    "free",
     "nightcore",
 ];

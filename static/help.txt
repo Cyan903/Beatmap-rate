@@ -6,5 +6,4 @@ Command List:
     -v, --version   - Change beatmap's version name
     -c, --creator   - Change beatmap's creator
     -a, --artist    - Change beatmap's artist
-    -f, --free      - Cleanup unused audio files
     -n, --nightcore - Change audio pitch (y/n)
