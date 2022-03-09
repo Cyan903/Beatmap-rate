@@ -2,10 +2,10 @@ import consola from "consola";
 import path from "path";
 import { exec } from "child_process";
 
-export function createFileName(filename: string, rate: number) {
+export function createFileName(filename: string, rate: number, pitchType: boolean) {
     const p = path.parse(filename);
 
-    return `${p.name} [${rate.toFixed(2)}x]${p.ext}`;
+    return `${p.name} [${rate.toFixed(2)}x]${pitchType ? " + NC" : ""}${p.ext}`;
 }
 
 // https://superuser.com/a/1676402
@@ -15,7 +15,7 @@ export async function modAudio(
     rate: number,
     pitchType: boolean
 ) {
-    const newName = createFileName(filename, rate);
+    const newName = createFileName(filename, rate, pitchType);
     const cmds = pitchType
         ? `ffmpeg -i "${
               npath + filename

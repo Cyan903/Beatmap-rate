@@ -26,8 +26,8 @@ export async function modBeatmap(
     // better to copy the file and edit whats necessary beacause I would rather this
     // app only affect the objects that need to be changed.
     const newAudio = await modAudio(npath, bAudio, rate, pitchType);
-    const newName = createFileName(filename, rate);
-    const newVersion = `${map.Version} [${rate}x]`;
+    const newName = createFileName(filename, rate, pitchType);
+    const newVersion = `${map.Version} [${rate}x]${pitchType ? " + NC" : ""}`;
 
     const newHitObjects = updateHitObjects(map.hitObjects, rate);
     const newTimingPoints = updateTimingPoints(map.timingPoints, rate);
