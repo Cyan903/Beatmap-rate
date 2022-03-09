@@ -19,9 +19,9 @@ export async function modAudio(
     const cmds = pitchType
         ? `ffmpeg -i "${
               npath + filename
-          }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af "asetrate=44100*${rate}" "${
-              npath + newName
-          }" -y`
+          }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af "asetrate=$(ffprobe -v error -show_entries stream=sample_rate -of default=noprint_wrappers=1:nokey=1 '${
+              npath + filename
+          }')*${rate}" "${npath + newName}" -y`
         : `ffmpeg -i "${
               npath + filename
           }" -vf "setpts=(PTS-STARTPTS)/${rate}" -af atempo=${rate} "${

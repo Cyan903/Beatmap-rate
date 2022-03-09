@@ -34,3 +34,9 @@ $ npm i
 $ npm run build
 $ npm i -g .
 ```
+
+### Uninstall
+To uninstall globally:
+```
+$ npm uninstall -g beatmap-rate
+```
